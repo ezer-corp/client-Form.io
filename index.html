@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>홈페이지 제작 정보 수집</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-light: #4a4a6a;
+    --paper: #faf8f4;
+    --paper-warm: #f2ede4;
+    --rule: #d4c9b8;
+    --accent: #c4622d;
+    --accent-soft: #f0e6de;
+    --success: #2d7a4f;
+    --success-soft: #e0f0e8;
+    --step-done: #8a7a6a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(180,160,130,0.12) 27px,
+        rgba(180,160,130,0.12) 28px
+      );
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .brand-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    opacity: 0.5;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .progress-track {
+    width: 120px;
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* LAYOUT */
+  .page-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* INTRO */
+  .intro {
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .intro-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  .intro-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+
+  .intro-title em {
+    font-style: normal;
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .intro-desc {
+    font-size: 15px;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+
+  .intro-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--ink-light);
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 56px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rule);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 32px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .section-badge {
+    margin-left: auto;
+    font-size: 11px;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 3px 10px;
+    border-radius: 20px;
+    color: var(--ink-light);
+    white-space: nowrap;
+  }
+
+  /* FIELD */
+  .field {
+    margin-bottom: 24px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 7px;
+    letter-spacing: 0.2px;
+  }
+
+  label .required {
+    color: var(--accent);
+    margin-left: 3px;
+  }
+
+  label .optional {
+    font-size: 11px;
+    color: var(--step-done);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--rule);
+    border-radius: 6px;
+    padding: 11px 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px rgba(26,26,46,0.06);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #b0a898;
+    font-size: 13px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 96px;
+    line-height: 1.7;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a4a6a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--step-done);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  /* SERVICE ITEMS */
+  .service-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .service-item {
+    display: grid;
+    grid-template-columns: 28px 1fr 2fr;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .service-num {
+    font-size: 12px;
+    color: var(--step-done);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  /* CHECKBOX GROUP */
+  .check-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .check-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: white;
+    border: 1.5px solid var(--rule);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .check-label:hover {
+    border-color: var(--ink);
+    background: var(--paper-warm);
+  }
+
+  .check-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .check-label:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  /* SUBMIT */
+  .submit-area {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 2px solid var(--ink);
+    text-align: center;
+  }
+
+  .submit-note {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  .btn-submit {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 16px 48px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: 0;
+  }
+
+  .btn-submit:hover::after { transform: scaleX(1); }
+  .btn-submit span { position: relative; z-index: 1; }
+  .btn-submit:hover { box-shadow: 0 4px 20px rgba(196,98,45,0.3); }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* SUCCESS STATE */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 80px 40px;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--success-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 28px;
+  }
+
+  .success-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .success-desc {
+    font-size: 15px;
+    color: var(--ink-light);
+    line-height: 1.8;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  /* FORMSPREE NOTICE */
+  .setup-banner {
+    background: #fffbf0;
+    border: 1.5px solid #f0c040;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #5a4a00;
+  }
+
+  .setup-banner strong { color: #3a2a00; }
+  .setup-banner code {
+    background: #f0e080;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 20px; }
+    .page-wrap { padding: 40px 16px 80px; }
+    .field-row { grid-template-columns: 1fr; }
+    .service-item { grid-template-columns: 24px 1fr; }
+    .service-item input:last-child { grid-column: 2; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-name">홈페이지 제작 의뢰서</div>
+    <div class="brand-sub">Homepage Production Request</div>
+  </div>
+  <div class="progress-info">
+    <span id="progressText">0 / 7</span>
+    <div class="progress-track">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="intro-label">Homepage Planning · Client Intake</div>
+    <h1 class="intro-title">
+      더 좋은 홈페이지를 위한<br><em>7가지 질문</em>
+    </h1>
+    <p class="intro-desc">
+      작성해주신 내용을 바탕으로 최적의 홈페이지 구조와 콘텐츠를 기획합니다.<br>
+      모르시는 항목은 공란으로 두셔도 됩니다.
+    </p>
+    <div class="intro-time">
+      ⏱ 예상 소요 시간: 약 5~10분
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form id="clientForm" action="https://formspree.io/f/mqeyppeb" method="POST">
+
+    <!-- 숨김 필드: MD 형식으로 변환된 전체 내용 -->
+    <input type="hidden" name="_subject" value="[홈페이지 기획] 새 고객 정보 수신">
+    <input type="hidden" name="_format" value="plain">
+    <input type="hidden" name="전체내용_MD" id="mdContent">
+
+    <!-- SECTION 1 -->
+    <div class="section" data-section="1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">회사 기본정보</span>
+        <span class="section-badge">필수</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>회사명 <span class="required">*</span></label>
+          <input type="text" name="회사명" placeholder="(주)홍길동컴퍼니" required>
+        </div>
+        <div class="field">
+          <label>업종 <span class="required">*</span></label>
+          <select name="업종" required>
+            <option value="">선택해주세요</option>
+            <option>IT / 소프트웨어</option>
+            <option>제조 / 유통</option>
+            <option>전문직 / 컨설팅</option>
+            <option>교육 / 학원</option>
+            <option>의료 / 헬스케어</option>
+            <option>건설 / 인테리어</option>
+            <option>금융 / 보험</option>
+            <option>식품 / 외식</option>
+            <option>뷰티 / 패션</option>
+            <option>부동산</option>
+            <option>스타트업</option>
+            <option>기타</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>설립연도 <span class="optional">선택</span></label>
+          <input type="text" name="설립연도" placeholder="2018년">
+        </div>
+        <div class="field">
+          <label>직원 수 <span class="optional">선택</span></label>
+          <select name="직원수">
+            <option value="">선택</option>
+            <option>1~5명</option>
+            <option>6~20명</option>
+            <option>21~50명</option>
+            <option>51~100명</option>
+            <option>100명 이상</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>대표 연락처 <span class="required">*</span></label>
+          <input type="tel" name="연락처" placeholder="010-0000-0000" required>
+        </div>
+        <div class="field">
+          <label>이메일 <span class="required">*</span></label>
+          <input type="email" name="이메일" placeholder="hello@company.com" required>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>회사 주소 <span class="optional">선택</span></label>
+          <input type="text" name="주소" placeholder="서울시 강남구 테헤란로 123">
+        </div>
+        <div class="field">
+          <label>현재 홈페이지 <span class="optional">있다면</span></label>
+          <input type="url" name="현재홈페이지" placeholder="https://example.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" data-section="2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-title">홈페이지 목적</span>
+        <span class="section-badge">필수</span>
+      </div>
+
+      <div class="field">
+        <label>홈페이지가 필요한 이유 <span class="required">*</span></label>
+        <div class="check-group">
+          <label class="check-label"><input type="checkbox" name="목적" value="신규 고객 유치"> 신규 고객 유치</label>
+          <label class="check-label"><input type="checkbox" name="목적" value="브랜드 신뢰도 향상"> 브랜드 신뢰도 향상</label>
+          <label class="check-label"><input type="checkbox" name="목적" value="제품·서비스 홍보"> 제품·서비스 홍보</label>
+          <label class="check-label"><input type="checkbox" name="목적" value="채용"> 채용</label>
+          <label class="check-label"><input type="checkbox" name="목적" value="투자 유치"> 투자 유치</label>
+          <label class="check-label"><input type="checkbox" name="목적" value="온라인 판매"> 온라인 판매</label>
+          <label class="check-label"><input type="checkbox" name="목적" value="기존 홈페이지 리뉴얼"> 기존 홈페이지 리뉴얼</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>홈페이지를 통해 해결하고 싶은 문제 <span class="required">*</span></label>
+        <textarea name="해결하고싶은문제" placeholder="예: 오프라인 영업에만 의존하고 있어서 온라인으로 문의가 들어오는 채널을 만들고 싶어요." required></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" data-section="3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-title">주요 서비스 / 제품</span>
+        <span class="section-badge">최대 5개</span>
+      </div>
+      <p class="field-hint" style="margin-bottom:16px">서비스명과 간단한 설명을 입력해주세요. 모르시면 서비스명만 적어도 됩니다.</p>
+
+      <div class="service-list">
+        <div class="service-item">
+          <span class="service-num">1</span>
+          <input type="text" name="서비스1_명" placeholder="서비스명">
+          <input type="text" name="서비스1_설명" placeholder="한 줄 설명 (선택)">
+        </div>
+        <div class="service-item">
+          <span class="service-num">2</span>
+          <input type="text" name="서비스2_명" placeholder="서비스명">
+          <input type="text" name="서비스2_설명" placeholder="한 줄 설명 (선택)">
+        </div>
+        <div class="service-item">
+          <span class="service-num">3</span>
+          <input type="text" name="서비스3_명" placeholder="서비스명">
+          <input type="text" name="서비스3_설명" placeholder="한 줄 설명 (선택)">
+        </div>
+        <div class="service-item">
+          <span class="service-num">4</span>
+          <input type="text" name="서비스4_명" placeholder="서비스명 (선택)">
+          <input type="text" name="서비스4_설명" placeholder="한 줄 설명 (선택)">
+        </div>
+        <div class="service-item">
+          <span class="service-num">5</span>
+          <input type="text" name="서비스5_명" placeholder="서비스명 (선택)">
+          <input type="text" name="서비스5_설명" placeholder="한 줄 설명 (선택)">
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" data-section="4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <span class="section-title">타겟 고객</span>
+        <span class="section-badge">필수</span>
+      </div>
+
+      <div class="field">
+        <label>주요 고객은 누구인가요? <span class="required">*</span></label>
+        <div class="check-group">
+          <label class="check-label"><input type="checkbox" name="타겟유형" value="B2B (기업 고객)"> B2B (기업 고객)</label>
+          <label class="check-label"><input type="checkbox" name="타겟유형" value="B2C (일반 소비자)"> B2C (일반 소비자)</label>
+          <label class="check-label"><input type="checkbox" name="타겟유형" value="B2G (공공기관)"> B2G (공공기관)</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>고객을 좀 더 구체적으로 설명해주세요</label>
+        <textarea name="타겟상세" placeholder="예: 직원 10~50명 규모의 중소기업 대표 또는 마케팅 담당자. 디지털 전환에 관심은 있지만 어디서 시작해야 할지 모르는 분들."></textarea>
+      </div>
+
+      <div class="field">
+        <label>고객이 우리를 선택하는 이유</label>
+        <textarea name="선택이유" placeholder="예: 합리적인 가격에 빠른 납기, 사후 관리가 철저함"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" data-section="5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <span class="section-title">레퍼런스 / 선호 스타일</span>
+        <span class="section-badge">선택</span>
+      </div>
+
+      <div class="field">
+        <label>참고하고 싶은 홈페이지 URL</label>
+        <input type="text" name="레퍼런스URL" placeholder="https://example.com (여러 개면 쉼표로 구분)">
+        <p class="field-hint">없으시면 아래 스타일 선호도를 선택해주세요</p>
+      </div>
+
+      <div class="field">
+        <label>원하는 분위기</label>
+        <div class="check-group">
+          <label class="check-label"><input type="checkbox" name="스타일" value="모던/심플"> 모던·심플</label>
+          <label class="check-label"><input type="checkbox" name="스타일" value="고급스러운/럭셔리"> 고급·럭셔리</label>
+          <label class="check-label"><input type="checkbox" name="스타일" value="젊고 활기찬"> 젊고 활기찬</label>
+          <label class="check-label"><input type="checkbox" name="스타일" value="전문적/신뢰감"> 전문적·신뢰감</label>
+          <label class="check-label"><input type="checkbox" name="스타일" value="따뜻하고 친근한"> 따뜻·친근</label>
+          <label class="check-label"><input type="checkbox" name="스타일" value="강렬하고 임팩트 있는"> 강렬·임팩트</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>선호/기피 컬러</label>
+        <input type="text" name="컬러선호" placeholder="예: 네이비 계열 선호, 빨강 계열 제외">
+      </div>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="section" data-section="6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <span class="section-title">포트폴리오 / 제작 사례</span>
+        <span class="section-badge">선택</span>
+      </div>
+
+      <div class="field">
+        <label>제작 사례나 포트폴리오가 있나요?</label>
+        <select name="포트폴리오여부">
+          <option value="없음">없음</option>
+          <option value="있음">있음</option>
+          <option value="준비중">준비 중</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>있다면 간단히 설명해주세요</label>
+        <textarea name="포트폴리오내용" placeholder="예: 삼성전자 사내 시스템 구축, ABC쇼핑몰 리뉴얼, 스타트업 3곳 홈페이지 제작"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="section" data-section="7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <span class="section-title">강점 및 기타 요청사항</span>
+        <span class="section-badge">선택</span>
+      </div>
+
+      <div class="field">
+        <label>경쟁사 대비 우리 회사의 강점</label>
+        <textarea name="강점" placeholder="예: 업계 유일 24시간 고객지원, 특허 보유 기술, 10년 이상 전문가 팀"></textarea>
+      </div>
+
+      <div class="field">
+        <label>반드시 홈페이지에 포함되어야 할 내용</label>
+        <textarea name="필수포함사항" placeholder="예: 수상 이력 강조, 특정 인증 배지 표시, 창업자 스토리 필수"></textarea>
+      </div>
+
+      <div class="field">
+        <label>기타 전달 사항</label>
+        <textarea name="기타" placeholder="예: 경쟁사 홈페이지 링크, 특별히 걱정되는 점, 예산 범위 등"></textarea>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <p class="submit-note">
+        작성해주신 내용은 담당자 이메일로 전송되며<br>
+        영업일 기준 1일 이내에 기획 초안을 안내해드립니다.
+      </p>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span>의뢰서 제출하기 →</span>
+      </button>
+    </div>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <h2 class="success-title">제출이 완료되었습니다</h2>
+    <p class="success-desc">
+      소중한 정보를 보내주셔서 감사합니다.<br>
+      담당자가 내용을 검토한 후 영업일 기준 1일 이내에 연락드립니다.
+    </p>
+  </div>
+
+</div>
+
+<script>
+// 진행률 업데이트
+function updateProgress() {
+  const sections = document.querySelectorAll('.section[data-section]');
+  let filled = 0;
+  sections.forEach(section => {
+    const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+    const anyInput = section.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], select, textarea');
+    let hasSomething = false;
+    anyInput.forEach(el => {
+      if (el.value && el.value.trim()) hasSomething = true;
+    });
+    section.querySelectorAll('input[type="checkbox"]:checked').forEach(() => hasSomething = true);
+    if (hasSomething) filled++;
+  });
+
+  const pct = Math.round((filled / 7) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${filled} / 7`;
+}
+
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', updateProgress);
+  el.addEventListener('change', updateProgress);
+});
+
+// MD 생성
+function generateMD(form) {
+  const d = new FormData(form);
+  const get = k => d.get(k) || '';
+  const getAll = k => d.getAll(k).filter(Boolean);
+
+  const services = [1,2,3,4,5].map(i => {
+    const name = get(`서비스${i}_명`);
+    const desc = get(`서비스${i}_설명`);
+    if (!name) return null;
+    return desc ? `${i}. ${name}: ${desc}` : `${i}. ${name}`;
+  }).filter(Boolean).join('\n');
+
+  return `# 홈페이지 제작 의뢰서
+
+## 회사 기본정보
+- 회사명: ${get('회사명')}
+- 업종: ${get('업종')}
+- 설립연도: ${get('설립연도') || '미기재'}
+- 직원 수: ${get('직원수') || '미기재'}
+- 연락처: ${get('연락처')}
+- 이메일: ${get('이메일')}
+- 주소: ${get('주소') || '미기재'}
+- 현재 홈페이지: ${get('현재홈페이지') || '없음'}
+
+## 홈페이지 목적
+- 목적: ${getAll('목적').join(', ') || '미기재'}
+- 해결하고 싶은 문제: ${get('해결하고싶은문제')}
+
+## 주요 서비스
+${services || '미기재'}
+
+## 타겟 고객
+- 고객 유형: ${getAll('타겟유형').join(', ') || '미기재'}
+- 상세 설명: ${get('타겟상세') || '미기재'}
+- 선택 이유: ${get('선택이유') || '미기재'}
+
+## 레퍼런스 / 스타일
+- 레퍼런스 URL: ${get('레퍼런스URL') || '없음'}
+- 선호 스타일: ${getAll('스타일').join(', ') || '미기재'}
+- 컬러 선호: ${get('컬러선호') || '미기재'}
+
+## 포트폴리오
+- 보유 여부: ${get('포트폴리오여부')}
+- 내용: ${get('포트폴리오내용') || '미기재'}
+
+## 강점 및 기타
+- 강점: ${get('강점') || '미기재'}
+- 필수 포함 사항: ${get('필수포함사항') || '미기재'}
+- 기타: ${get('기타') || '미기재'}`;
+}
+
+// 폼 제출
+document.getElementById('clientForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const md = generateMD(this);
+  document.getElementById('mdContent').value = md;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.querySelector('span').textContent = '제출 중...';
+
+  try {
+    const response = await fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      document.getElementById('clientForm').style.display = 'none';
+      document.getElementById('setupBanner').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      throw new Error('제출 실패');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.querySelector('span').textContent = '의뢰서 제출하기 →';
+    alert('제출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+  }
+});
+
+// Formspree ID가 설정되지 않았으면 배너 강조
+if (document.querySelector('form').action.includes('YOUR_FORMSPREE_ID')) {
+  document.getElementById('setupBanner').style.borderColor = '#e05000';
+  document.getElementById('setupBanner').style.background = '#fff5f0';
+}
+</script>
+</body>
+</html>
