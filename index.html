@@ -491,10 +491,9 @@
   <!-- FORM -->
   <form id="clientForm" action="https://formspree.io/f/mqeyppeb" method="POST">
 
-    <!-- 숨김 필드: MD 형식으로 변환된 전체 내용 -->
+    <!-- Formspree 전송용: MD 전체 내용만 단일 필드로 전송 -->
     <input type="hidden" name="_subject" value="[홈페이지 기획] 새 고객 정보 수신">
-    <input type="hidden" name="_format" value="plain">
-    <input type="hidden" name="전체내용_MD" id="mdContent">
+    <input type="hidden" name="기획서_MD" id="mdContent">
 
     <!-- SECTION 1 -->
     <div class="section" data-section="1">
@@ -849,31 +848,47 @@ ${services || '미기재'}
 document.getElementById('clientForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  const md = generateMD(this);
-  document.getElementById('mdContent').value = md;
-
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.querySelector('span').textContent = '제출 중...';
 
+  // MD 생성 후 단일 필드에 담기
+  const md = generateMD(this);
+  document.getElementById('mdContent').value = md;
+
+  // Formspree에는 MD 필드 + subject만 전송 (개별 필드 제외)
+  const payload = new FormData();
+  payload.append('_subject', document.querySelector('[name="_subject"]').value);
+  payload.append('기획서_MD', md);
+
   try {
     const response = await fetch(this.action, {
       method: 'POST',
-      body: new FormData(this),
+      body: payload,
       headers: { 'Accept': 'application/json' }
     });
 
-    if (response.ok) {
+    // Formspree는 성공 시 { ok: true } 반환
+    const result = await response.json().catch(() => ({}));
+
+    if (response.ok || result.ok) {
       document.getElementById('clientForm').style.display = 'none';
       document.getElementById('setupBanner').style.display = 'none';
       document.getElementById('successScreen').style.display = 'block';
     } else {
-      throw new Error('제출 실패');
+      throw new Error(result.error || '제출 실패');
     }
   } catch (err) {
-    btn.disabled = false;
-    btn.querySelector('span').textContent = '의뢰서 제출하기 →';
-    alert('제출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    // 이미 성공적으로 전송됐지만 파싱 오류인 경우도 성공 처리
+    if (err.name === 'SyntaxError') {
+      document.getElementById('clientForm').style.display = 'none';
+      document.getElementById('setupBanner').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      btn.disabled = false;
+      btn.querySelector('span').textContent = '의뢰서 제출하기 →';
+      alert('제출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    }
   }
 });
 
